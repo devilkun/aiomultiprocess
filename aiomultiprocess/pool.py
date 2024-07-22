@@ -108,7 +108,7 @@ class PoolWorker(Process):
                 tb = None
                 try:
                     result = future.result()
-                except BaseException as e:
+                except BaseException as e:  # noqa: B036
                     if self.exception_handler is not None:
                         self.exception_handler(e)
 
@@ -150,13 +150,13 @@ class Pool:
 
     def __init__(
         self,
-        processes: int = None,
-        initializer: Callable[..., None] = None,
+        processes: Optional[int] = None,
+        initializer: Optional[Callable[..., None]] = None,
         initargs: Sequence[Any] = (),
         maxtasksperchild: int = MAX_TASKS_PER_CHILD,
         childconcurrency: int = CHILD_CONCURRENCY,
         queuecount: Optional[int] = None,
-        scheduler: Scheduler = None,
+        scheduler: Optional[Scheduler] = None,
         loop_initializer: Optional[LoopInitializer] = None,
         exception_handler: Optional[Callable[[BaseException], None]] = None,
     ) -> None:
@@ -316,8 +316,8 @@ class Pool:
     async def apply(
         self,
         func: Callable[..., Awaitable[R]],
-        args: Sequence[Any] = None,
-        kwds: Dict[str, Any] = None,
+        args: Optional[Sequence[Any]] = None,
+        kwds: Optional[Dict[str, Any]] = None,
     ) -> R:
         """Run a single coroutine on the pool."""
         if not self.running:
